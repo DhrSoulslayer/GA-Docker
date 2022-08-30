@@ -7,9 +7,53 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      - TZ=Europe/Amsterdam
     volumes:
       - ./davos/config:/config
       - /opt/downloads:/download
     ports:
       - 8080:8080
     restart: unless-stopped
+  dokuwiki:
+    image: lscr.io/linuxserver/dokuwiki:latest
+    container_name: dokuwiki
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+    volumes:
+      - ./dokuwiki/config:/config
+    ports:
+      - 80:80
+      - 443:443 #optional
+    restart: unless-stopped
+  endlessh:
+    image: lscr.io/linuxserver/endlessh:latest
+    container_name: endlessh
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+      - MSDELAY=10000 #optional
+      - MAXLINES=32 #optional
+      - MAXCLIENTS=4096 #optional
+      - LOGFILE=false #optional
+      - BINDFAMILY= #optional
+    volumes:
+      - ./endlesssh/config:/config #optional
+    ports:
+      - 22:2222
+    restart: unless-stopped
+  homeassistant:
+    image: lscr.io/linuxserver/homeassistant:latest
+    container_name: homeassistant
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+    volumes:
+      - ./homeassistant:/config
+    ports:
+      - 8123:8123 #optional
+    restart: unless-stopped   
